@@ -3,7 +3,7 @@
 
 # Tạo máy ảo từ box centos/7, gán địa chỉ IP, đặt hostname, gán 2GB bộ nhớ, 2 cpus  
 Vagrant.configure("2") do |config|
-    config.vm.box = "ubuntu/22.04"
+    config.vm.box = "generic/ubuntu2204"
     config.vm.network "private_network", ip: "172.16.10.100"
     config.vm.hostname = "k8s.master.pong"
   

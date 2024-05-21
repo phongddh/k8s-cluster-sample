@@ -69,8 +69,4 @@ sudo swapoff -a
 #Then use the sed command below to make the necessary adjustments to the /etc/fstab file:
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
-# Configure NetworkManager before attempting to use Calico networking.
-cat >>/etc/NetworkManager/conf.d/calico.conf<<EOF
-[keyfile]
-unmanaged-devices=interface-name:cali*;interface-name:tunl*
-EOF
+# Configure NetworkManager before attempting to use Calico networki

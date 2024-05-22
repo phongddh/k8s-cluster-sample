@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
       end
       
       # Chạy file install-docker-kube.sh sau khi nạp Box
-      vm_config.vm.provision "shell", path: "./../install-docker-kube.sh"
+      vm_config.vm.provision "shell", path: "./../install-k8s.sh"
       
       # Chạy các lệnh shell
       vm_config.vm.provision "shell", inline: <<-SHELL

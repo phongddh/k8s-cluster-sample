@@ -5,7 +5,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # 1. Install Containerd
 # Install Containerd Runtime
-sudo apt-get update -y
+sudo apt -y update && sudo apt -y upgrade
 sudo apt-get install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/docker.gpg
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"

@@ -56,13 +56,17 @@ sudo apt-mark hold kubelet kubeadm kubectl
 
 # Step 7: Initialize Kubernetes Cluster with Kubeadm (master node)
 # With all the prerequisites in place, initialize the Kubernetes cluster on the master node using the following Kubeadm command:
-sudo kubeadm init --control-plane-endpoint=k8s.master.pong
+sudo kubeadm init
 # After the initialization is complete make a note of the kubeadm join command for future reference.
 # Run the following commands on the master node:
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# Step 8: Install Kubernetes Network Plugin (master node)
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
 # Next, use kubectl commands to check the cluster and node status:
+kubectl get pods -n kube-system
 kubectl get nodes
 
 # kubeadm join k8s.master.pong:6443 --token x9ia6d.9kg5ws2ywq8x9maz \

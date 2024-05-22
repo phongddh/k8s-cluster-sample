@@ -64,3 +64,6 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # Next, use kubectl commands to check the cluster and node status:
 kubectl get nodes
+
+# kubeadm join k8s.master.pong:6443 --token x9ia6d.9kg5ws2ywq8x9maz \
+#    --discovery-token-ca-cert-hash sha256:1d6b3c80b1caa6819097871eceb255e4eb4888c88ded19add63fd1a1eb063856

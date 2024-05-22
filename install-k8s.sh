@@ -1,6 +1,9 @@
-# Step 1: Update and Upgrade Ubuntu (all nodes)
-sudo apt -y update
-sudo apt -y upgrade
+# Step 1: Update and more Ubuntu (all nodes)
+sudo apt-get -y update
+DEBIAN_FRONTEND=noninteractive sudo apt-get install ca-certificates curl -y
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 # Step 2: Disable Swap (all nodes)
 sudo swapoff -a
@@ -24,12 +27,14 @@ sudo sysctl --system
 
 # Step 4: Install Containerd Runtime (all nodes)
 # We are using the containerd runtime. Install containerd and its dependencies with the following commands:
-sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
+DEBIAN_FRONTEND=noninteractive sudo apt-get install -y curl gnupg2 software-properties-common apt-transport-https
 # Enable the Docker repository:
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/docker.gpg
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 # Update the package list and install containerd:
-sudo apt -y update
+sudo apt-get -y update
 sudo apt install -y containerd.io
 # Configure containerd to start using systemd as cgroup:
 containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
@@ -40,12 +45,12 @@ sudo systemctl enable containerd
 
 # Step 5: Add Apt Repository for Kubernetes (all nodes)
 # Kubernetes packages are not available in the default Ubuntu 22.04 repositories. Add the Kubernetes repositories with the following commands:
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/kubernetes-xenial.gpg
-sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 # Step 6: Install Kubectl, Kubeadm, and Kubelet (all nodes)
 # After adding the repositories, install essential Kubernetes components, including kubectl, kubelet, and kubeadm, on all nodes with the following commands:
-sudo apt -y update
+sudo apt-get -y update
 sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 

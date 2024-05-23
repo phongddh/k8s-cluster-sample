@@ -1,6 +1,6 @@
 # Step 1: Update and more Ubuntu (all nodes)
-sudo apt-get -y update
-DEBIAN_FRONTEND=noninteractive sudo apt-get install ca-certificates curl -y
+sudo apt -y update
+DEBIAN_FRONTEND=noninteractive sudo apt install ca-certificates curl telnet net-tools -y
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -34,7 +34,7 @@ echo \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 # Update the package list and install containerd:
-sudo apt-get -y update
+sudo apt -y update
 sudo apt install -y containerd.io
 # Configure containerd to start using systemd as cgroup:
 containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
@@ -50,26 +50,31 @@ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --
 
 # Step 6: Install Kubectl, Kubeadm, and Kubelet (all nodes)
 # After adding the repositories, install essential Kubernetes components, including kubectl, kubelet, and kubeadm, on all nodes with the following commands:
-sudo apt-get -y update
+sudo apt -y update
 sudo apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
 # Step 7: Initialize Kubernetes Cluster with Kubeadm (master node)
 # With all the prerequisites in place, initialize the Kubernetes cluster on the master node using the following Kubeadm command:
-sudo kubeadm init
+sudo kubeadm init k8s-master-pong
 # After the initialization is complete make a note of the kubeadm join command for future reference.
 # Run the following commands on the master node:
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+# Kiểm tra kết quả của lệnh khởi tạo
+if [ $? -eq 0 ]; then
+    echo "Kubernetes master initialization completed successfully."
+    echo "Make a note of the 'kubeadm join' command for future reference."
+
+    # Thực hiện các bước cấu hình kubectl trên master node
+    sudo mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+else
+    echo "Kubernetes master initialization failed. Please check the logs for more details."
+    exit 1
+fi
 
 # Step 8: Install Kubernetes Network Plugin (master node)
 kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
 # Next, use kubectl commands to check the cluster and node status:
 kubectl get pods -n kube-system
 kubectl get nodes
-
-# kubeadm join k8s.master.pong:6443 --token x9ia6d.9kg5ws2ywq8x9maz \
-#    --discovery-token-ca-cert-hash sha256:1d6b3c80b1caa6819097871eceb255e4eb4888c88ded19add63fd1a1eb063856
-
-kubeadm join 10.0.2.15:6443 --token dof8zn.dlc0ggpyjg48w0by	--discovery-token-ca-cert-hash sha256:4e79b1e607d30fd6994be2b225ab3a4533197a6525fec305b74e79a6449d4c88

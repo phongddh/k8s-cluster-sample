@@ -24,6 +24,7 @@ Vagrant.configure("2") do |config|
         192.168.56.11 k8s-worker1-pong
         192.168.56.12 k8s-worker2-pong
   EOF
+  
       SHELL
   
       # Run install-k8s.sh after provisioning the Box

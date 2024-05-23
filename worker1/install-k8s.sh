@@ -1,6 +1,6 @@
 # Step 1: Update and more Ubuntu (all nodes)
-sudo apt -y update
-DEBIAN_FRONTEND=noninteractive sudo apt install ca-certificates curl telnet net-tools -y
+sudo apt-get -y update
+DEBIAN_FRONTEND=noninteractive sudo apt-get install ca-certificates curl telnet net-tools -y
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -27,15 +27,15 @@ sudo sysctl --system
 
 # Step 4: Install Containerd Runtime (all nodes)
 # We are using the containerd runtime. Install containerd and its dependencies with the following commands:
-DEBIAN_FRONTEND=noninteractive sudo apt install -y curl gnupg2 software-properties-common apt-transport-https
+DEBIAN_FRONTEND=noninteractive sudo apt-get install -y curl gnupg2 software-properties-common apt-transport-https
 # Enable the Docker repository:
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 # Update the package list and install containerd:
-sudo apt -y update
-sudo apt install -y containerd.io
+sudo apt-get -y update
+sudo apt-get install -y containerd.io
 # Configure containerd to start using systemd as cgroup:
 containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
 sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
@@ -50,8 +50,9 @@ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --
 
 # Step 6: Install Kubectl, Kubeadm, and Kubelet (all nodes)
 # After adding the repositories, install essential Kubernetes components, including kubectl, kubelet, and kubeadm, on all nodes with the following commands:
-sudo apt -y update
-sudo apt install -y kubelet kubeadm kubectl
+sudo apt-get -y update
+sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
 # Step 7: Add Worker Nodes to the Cluster (worker nodes)
+kubeadm join 192.168.56.10:6443 --token l30f4p.uxncjk70ydxqq2s7 --discovery-token-ca-cert-hash sha256:bf507239f6e0325f76c34ed3cf11e85ea25f4c1c8fb466f204439739899859c6

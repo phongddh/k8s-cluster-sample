@@ -59,19 +59,10 @@ sudo apt-mark hold kubelet kubeadm kubectl
 sudo kubeadm init --apiserver-advertise-address=192.168.56.10 --pod-network-cidr=192.168.0.0/16
 # After the initialization is complete make a note of the kubeadm join command for future reference.
 # Run the following commands on the master node:
-# Kiểm tra kết quả của lệnh khởi tạo
-if [ $? -eq 0 ]; then
-    echo "Kubernetes master initialization completed successfully."
-    echo "Make a note of the 'kubeadm join' command for future reference."
 
-    # Thực hiện các bước cấu hình kubectl trên master node
-    sudo mkdir -p $HOME/.kube
-    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-    sudo chown $(id -u):$(id -g) $HOME/.kube/config
-else
-    echo "Kubernetes master initialization failed. Please check the logs for more details."
-    exit 1
-fi
+sudo mkdir -p /home/vagrant/.kube
+sudo cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+sudo chown $(id -u):$(id -g) /home/vagrant/.kube/config
 
 # Step 8: Install Kubernetes Network Plugin (master node)
 kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml

@@ -71,3 +71,5 @@ kubectl get nodes
 
 # kubeadm join k8s.master.pong:6443 --token x9ia6d.9kg5ws2ywq8x9maz \
 #    --discovery-token-ca-cert-hash sha256:1d6b3c80b1caa6819097871eceb255e4eb4888c88ded19add63fd1a1eb063856
+
+kubeadm join 10.0.2.15:6443 --token dof8zn.dlc0ggpyjg48w0by	--discovery-token-ca-cert-hash sha256:4e79b1e607d30fd6994be2b225ab3a4533197a6525fec305b74e79a6449d4c88

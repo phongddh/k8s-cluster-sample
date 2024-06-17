@@ -1,0 +1,17 @@
+# Thông tin cluster
+kubectl cluster-info
+# To further debug and diagnose cluster problems, use:
+kubectl cluster-info dump
+
+# Next, use kubectl commands to check the cluster and node status:
+kubectl get pods -n kube-system
+or 
+kubectl get pods -A
+kubectl get nodes
+
+# View kubectl info
+kubectl config view
+
+# Get command worker join to master
+kubeadm token create --print-join-command
+--> kubeadm join 192.168.56.10:6443 --token yde9l5.kmq8nk3hikil3kp3 --discovery-token-ca-cert-hash sha256:bf507239f6e0325f76c34ed3cf11e85ea25f4c1c8fb466f204439739899859c6
